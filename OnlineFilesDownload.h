@@ -1,0 +1,14 @@
+//
+// Created by akshi on 1/18/2017.
+//
+
+#ifndef GGSIPUEXTRACTOR_ONLINEFILESDOWNLOAD_H
+#define GGSIPUEXTRACTOR_ONLINEFILESDOWNLOAD_H
+
+
+class OnlineFilesDownload {
+
+};
+
+
+#endif //GGSIPUEXTRACTOR_ONLINEFILESDOWNLOAD_H
