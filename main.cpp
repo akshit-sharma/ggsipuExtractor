@@ -4,26 +4,25 @@
 #include <sys/param.h>
 
 #include "GlobalSetting.h"
-
+#include "OnlineFilesDownload.h"
 
 
 int main(int argc, char** argv) {
-    std::cout << "Hello, World!" << std::endl;
 
-    GlobalSetting gs = GlobalSetting::get();
+    GlobalSetting* gs = GlobalSetting::get();
 
     if(argc>=2){
-        gs.setDownloadLocation(argv[1]);
-    }else{
-
-        gs.getCurrentLoc();
-        std::string loc = gs.getDownloadLocation();
-
-        std::cout<<"Download location is set to "<<loc;
-
+        gs->setDownloadLocation(argv[1]);
+    }else {
+        gs->getCurrentLoc();
     }
 
+    std::string loc = gs->getDownloadLocation();
+    std::cout<<"Download location is set to "<<loc<<std::endl;
 
+    OnlineFilesDownload ofd;
+
+    ofd.filesAvailable();
 
 
 

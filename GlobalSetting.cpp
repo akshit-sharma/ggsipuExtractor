@@ -5,10 +5,14 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <string>
+#include <iostream>
 
 #include "GlobalSetting.h"
 
 using namespace std;
+
+
+GlobalSetting* GlobalSetting::instance = NULL;
 
 GlobalSetting::GlobalSetting() {
 
@@ -29,10 +33,12 @@ size_t GlobalSetting::getCurrentLoc(){
 
 }
 
-GlobalSetting& GlobalSetting::get(){
+GlobalSetting* GlobalSetting::get(){
 
-    static GlobalSetting instance;
-    return instance;
+    if(!instance)
+        instance = new GlobalSetting;
+
+    return GlobalSetting::instance;
 
 }
 
@@ -62,12 +68,18 @@ string GlobalSetting::getDownloadLocation() {
 
 }
 
+const char * GlobalSetting::getDownloadLocationC() {
+
+    return downloadLocation.c_str();
+
+}
+
 std::vector<std::string> GlobalSetting::getWebsiteLinks() {
 
     std::vector<std::string> website_links;
 
-    for(int i=0; i<websiteLinks->size(); i++){
-        website_links[i] = websiteLinks[i];
+    for(int i=0; i<4; i++){
+        website_links.push_back(websiteLinks[i]);
     }
 
     return website_links;
