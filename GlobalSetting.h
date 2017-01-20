@@ -25,6 +25,11 @@ private:
     };
 
 public:
+    bool skip_jdk_download = false;
+    bool skip_pdfbox_download = false;
+    bool skip_file_download = false;
+    bool skip_file_convert = false;
+
     std::vector<std::string> getWebsiteLinks();
 
     size_t getCurrentLoc();

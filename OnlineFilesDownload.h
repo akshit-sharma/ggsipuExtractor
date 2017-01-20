@@ -6,13 +6,17 @@
 #define GGSIPUEXTRACTOR_ONLINEFILESDOWNLOAD_H
 
 #include <string>
+#include <set>
 
 class OnlineFilesDownload {
 private:
     void _mkdir(const char *dir);
     std::string sendRequest(const char * site);
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
-    std::vector<std::string> trimPDFLinks(std::string response);
+    void trimPDFLinks(std::set<std::string> &list_of_files, std::string response, const char *url);
+    std::string getCorrectFileURL(std::string file, const char * url);
+    static void replaceAll(std::string& str, const std::string& from, const std::string& to);
+    int download_file(char *outfilename, const char *url);
 
 public:
     OnlineFilesDownload();
