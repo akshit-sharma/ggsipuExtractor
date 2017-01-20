@@ -726,9 +726,10 @@ void InformationExtractor::start(){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
-
+                    size_t openBrak;
                     if((stateHolder == SchemeID || stateHolder == Total)
-                       &&  (line.find('(')!=std::string::npos)){
+                       &&  ((openBrak=line.find('('))!=std::string::npos)
+                       && (line[openBrak+1]>=0 && line[openBrak+1]<=9)){
 
                         paperCode = 0;
                         do {
@@ -765,22 +766,30 @@ void InformationExtractor::start(){
 
                 if(stateHolder == paperCode){
 
-                    minor = 0;
-                    do {
-                        minor *= 10;
-                        minor += line[position]-'0';
-                        position++;
-                    }while(line[position]>='0' && line[position]<='9');
+                    if(line[position]=='-'){
+                        minor = 0;
+                    }else {
+                        minor = 0;
+                        do {
+                            minor *= 10;
+                            minor += line[position] - '0';
+                            position++;
+                        } while (line[position] >= '0' && line[position] <= '9');
+                    }
 
                     while(line[position]==' ')
                         position++;
 
-                    major = 0;
-                    do {
-                        major *= 10;
-                        major += line[position]-'0';
-                        position++;
-                    }while(line[position]>='0' && line[position]<='9');
+                    if(line[position]=='-'){
+                        major = 0;
+                    }else {
+                        major = 0;
+                        do {
+                            major *= 10;
+                            major += line[position] - '0';
+                            position++;
+                        } while (line[position] >= '0' && line[position] <= '9');
+                    }
 
                     stateHolder = Minor_Major;
 
@@ -845,6 +854,7 @@ void InformationExtractor::start(){
         }else if (line.find("RESULT TABULATION SHEET") != std::string::npos) {
             scheme = false;
             result = true;
+            stateHolder = RTSID;
         }else if(line.find("</div>") != std::string::npos){
             scheme = false;
             result = false;
