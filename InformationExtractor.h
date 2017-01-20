@@ -17,6 +17,8 @@ private:
 
     bool both_false();
 
+    std::string trim(const std::string & trim);
+
     std::string outputFile;
 
 public:

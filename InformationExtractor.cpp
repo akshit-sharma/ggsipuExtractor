@@ -98,11 +98,12 @@ void InformationExtractor::start(){
                 while (line[posi_programme] == ' ')
                     posi_programme++;
 
+                size_t posi_programme_end = line.find("SchemeID");
+
                 prog_name = "";
-                while (!(line[posi_programme] == ' ' && line[posi_programme+1] == ' ')) {
-                    prog_name += line[posi_programme];
-                    posi_programme++;
-                }
+                prog_name = line.substr(posi_programme,posi_programme_end-posi_programme);
+
+                prog_name = trim(prog_name);
 
                 if (prog_name.length() <= 1) {
                     string message = "Programme Name not found At LineNumber ";
@@ -506,13 +507,12 @@ void InformationExtractor::start(){
                 while (line[posi_programme] == ' ')
                     posi_programme++;
 
-                prog_name = "";
-                while (!(line[posi_programme] == ' ' &&
-                        (line[posi_programme+1] <= '0' && line[posi_programme+1] <= '9'))) {
-                    prog_name += line[posi_programme];
-                    posi_programme++;
-                }
+                size_t posi_programme_end = line.find("SchemeID");
 
+                prog_name = "";
+                prog_name = line.substr(posi_programme,posi_programme_end-posi_programme);
+
+                prog_name = trim(prog_name);
 
                 if (prog_name.length() <= 1) {
                     string message = "Programme Name not found At LineNumber ";
@@ -857,6 +857,17 @@ void InformationExtractor::start(){
 
    // inputFile.close();
 
+}
+
+string InformationExtractor::trim(const string& str)
+{
+    size_t first = str.find_first_not_of(' ');
+    if (string::npos == first)
+    {
+        return str;
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
 }
 
 bool InformationExtractor::both_false(){
