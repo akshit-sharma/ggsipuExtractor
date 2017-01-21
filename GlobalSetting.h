@@ -25,6 +25,7 @@ private:
     };
 
 public:
+    bool skip_request_pdf_list = false;
     bool skip_jdk_download = false;
     bool skip_pdfbox_download = false;
     bool skip_file_download = false;

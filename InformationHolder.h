@@ -29,48 +29,48 @@ public:
     void close_file_result();
 
     void insert_scheme(
-            int scheme_prog_code,
+            std::string scheme_prog_code,
             std::string prog_name,
-            long scheme_id,
+            std::string scheme_id,
             std::string prog_sem_year,
             std::string prepared_date,
             std::string declared_date,
-            int institute_code,
+            std::string institute_code,
             std::string institution_name,
-            int s_no,
-            int paper_id,
+            std::string s_no,
+            std::string paper_id,
             std::string paper_code,
             std::string subject_name,
-            int credits,
+            std::string credits,
             std::string type,
             std::string exam,
             std::string mode,
             std::string kind,
-            int minor,
-            int major,
-            int max_marks,
-            int pass_marks
+            std::string minor,
+            std::string major,
+            std::string max_marks,
+            std::string pass_marks
     );
 
     void insert_result(
-            int scheme_prog_code,
+            std::string scheme_prog_code,
             std::string prepared_date,
             std::string declared_date,
             std::string prog_name,
             std::string prog_sem_year,
-            int batch,
+            std::string batch,
             std::string examination,
-            int institute_code,
+            std::string institute_code,
             std::string institute_name,
-            long rollnumber,
+            std::string rollnumber,
             std::string name,
-            long sid,
-            long result_scheme_id,
-            int paperCode,
-            int credit,
-            int minor,
-            int major,
-            int total
+            std::string sid,
+            std::string result_scheme_id,
+            std::string paperCode,
+            std::string credit,
+            std::string minor,
+            std::string major,
+            std::string total
     );
 
 };

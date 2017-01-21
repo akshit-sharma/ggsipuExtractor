@@ -21,11 +21,10 @@ int main(int argc, char** argv) {
     std::string loc = gs->getDownloadLocation();
     std::cout<<"Download location is set to "<<loc<<std::endl;
 
+    OnlineFilesDownload ofd;
 
     InformationHolder::get()->open_file_scheme();
     InformationHolder::get()->open_file_result();
-
-    OnlineFilesDownload ofd;
 
     ofd.filesAvailable();
 

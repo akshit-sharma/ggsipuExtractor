@@ -6,6 +6,7 @@
 #include <sys/param.h>
 #include <string>
 #include <iostream>
+#include <cstring>
 
 #include "InformationHolder.h"
 #include "GlobalSetting.h"
@@ -16,6 +17,10 @@ InformationHolder* InformationHolder::instance = NULL;
 InformationHolder::InformationHolder() {
     scheme_file_name = GlobalSetting::get()->getDownloadLocation()+"/scheme.csv";
     result_file_name = GlobalSetting::get()->getDownloadLocation()+"/results.csv";
+
+    std::cout<<"scheme_file_name : "<<scheme_file_name<<std::endl;
+    std::cout<<"result_file_name : "<<result_file_name<<std::endl;
+
 }
 
 InformationHolder *InformationHolder::get() {
@@ -29,6 +34,12 @@ InformationHolder *InformationHolder::get() {
 
 void InformationHolder::open_file_scheme() {
     scheme_stream.open(scheme_file_name, std::ios::out | std::ios::app );
+
+    if(!scheme_stream){
+        std::cout<<"error"<<strerror(errno);
+        std::string message = scheme_file_name+" not made ";
+        throw std::runtime_error(message.c_str());
+    }
 
     scheme_stream<<"scheme_prog_code,prog_name,scheme_id,prog_sem_year,prepared_date,";
     scheme_stream<<"declared_date,institute_code,institution_name,s_no,paper_id,";
@@ -47,12 +58,12 @@ void InformationHolder::close_file_result() {
 }
 
 void
-InformationHolder::insert_scheme(int scheme_prog_code, std::string prog_name, long scheme_id, std::string prog_sem_year,
-                                 std::string prepared_date, std::string declared_date, int institute_code,
-                                 std::string institution_name, int s_no, int paper_id, std::string paper_code,
-                                 std::string subject_name, int credits, std::string type, std::string exam,
-                                 std::string mode, std::string kind, int minor, int major, int max_marks,
-                                 int pass_marks) {
+InformationHolder::insert_scheme(std::string scheme_prog_code, std::string prog_name, std::string scheme_id, std::string prog_sem_year,
+                                 std::string prepared_date, std::string declared_date, std::string institute_code,
+                                 std::string institution_name, std::string s_no, std::string paper_id, std::string paper_code,
+                                 std::string subject_name, std::string credits, std::string type, std::string exam,
+                                 std::string mode, std::string kind, std::string minor, std::string major, std::string max_marks,
+                                 std::string pass_marks) {
 
         scheme_stream<<scheme_prog_code <<","<<prog_name<<","<<scheme_id<<","<<prog_sem_year<<",";
         scheme_stream<<prepared_date<<","<<declared_date<<","<<institute_code<<","<<institution_name<<","<<s_no<<",";
@@ -65,16 +76,24 @@ InformationHolder::insert_scheme(int scheme_prog_code, std::string prog_name, lo
 void InformationHolder::open_file_result() {
     result_stream.open(result_file_name, std::ios::out | std::ios::app );
 
+
+    if(!result_stream){
+        std::cout<<"error "<<strerror(errno);
+        std::string message = result_file_name+" not made ";
+        throw std::runtime_error(message.c_str());
+    }
+
+
     result_stream<<"scheme_prog_code,prepared_date,declared_date,prog_name,prog_sem_year,";
     result_stream<<"batch,examination,institute_code,institute_name,rollnumber,name,sid,";
     result_stream<<"result_scheme_id,credit,minor,major,total"<<std::endl;
 
 }
-void InformationHolder::insert_result(int scheme_prog_code, std::string prepared_date, std::string declared_date,
-                                      std::string prog_name, std::string prog_sem_year, int batch,
-                                      std::string examination, int institute_code, std::string institute_name,
-                                      long rollnumber, std::string name, long sid, long result_scheme_id, int paperCode,
-                                      int credit, int minor, int major, int total) {
+void InformationHolder::insert_result(std::string scheme_prog_code, std::string prepared_date, std::string declared_date,
+                                      std::string prog_name, std::string prog_sem_year, std::string batch,
+                                      std::string examination, std::string institute_code, std::string institute_name,
+                                      std::string rollnumber, std::string name, std::string sid, std::string result_scheme_id, std::string paperCode,
+                                      std::string credit, std::string minor, std::string major, std::string total) {
 
         result_stream<<scheme_prog_code<<","<<prepared_date<<","<<declared_date<<",";
         result_stream<<prog_name<<","<<prog_sem_year<<","<<batch<<","<<examination<<",";

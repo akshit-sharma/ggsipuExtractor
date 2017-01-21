@@ -36,13 +36,23 @@ void OnlineFilesDownload::filesAvailable(){
 
     std::set<std::string> list_of_files;
 
-    while (iter != websiteLinks.end()){
+    if(!GlobalSetting::get()->skip_request_pdf_list){
 
-         string readBuffer  = sendRequest((*iter).c_str());
+        while (iter != websiteLinks.end()){
 
-         trimPDFLinks(list_of_files, readBuffer, (*iter).c_str());
+             string readBuffer  = sendRequest((*iter).c_str());
 
-         iter++;
+             trimPDFLinks(list_of_files, readBuffer, (*iter).c_str());
+
+            cout<<"Pass "<<*iter<<" length of set "<<list_of_files.size()<<endl;
+
+             iter++;
+        }
+
+    }else{
+
+        list_of_files.insert("One time pass");
+
     }
 
     //Download JDK
@@ -53,7 +63,7 @@ void OnlineFilesDownload::filesAvailable(){
 
     if(!GlobalSetting::get()->skip_jdk_download) {
         system("wget --no-cookies --no-check-certificate --header \"Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense\" \"http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jdk-8u112-linux-x64.tar.gz\"");
-        system("tar zxvf jdk-8u112-linux-x64.tar.gz");
+        system("tar xf jdk-8u112-linux-x64.tar.gz");
     }
 
 
@@ -99,6 +109,8 @@ void OnlineFilesDownload::filesAvailable(){
             informationExtractor.start();
         }catch (runtime_error){
             perror("Handing runtime error and continuing next ... \n");
+            std::string message_err = "Error in file "+ *iter+"\n";
+            perror(message_err.c_str());
         }
 
     }
@@ -210,8 +222,8 @@ void OnlineFilesDownload::trimPDFLinks(std::set<std::string> &list_of_files, std
         char c = buffer[i];
 
         if(c=='h' && buffer[i+1]=='r' && buffer[i+2]=='e' && buffer[i+3]=='f'){
-            start = i + 6;
-            end = table.find('"',start);
+            start = table.find('"',i);
+            end = table.find('"',start+1);
             string partialName = table.substr(start,end-start);
             if(partialName.find("pdf")!=std::string::npos)
                 list_of_files.insert(getCorrectFileURL(partialName,url));
@@ -243,7 +255,7 @@ std::string OnlineFilesDownload::getCorrectFileURL(std::string file, const char 
         full_url = url_home.append(file);
     }
 
-    cout<<"adding "<<full_url<<endl;
+//    cout<<"adding "<<full_url<<endl;
 
     return full_url;
 }

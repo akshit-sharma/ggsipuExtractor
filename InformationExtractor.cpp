@@ -29,27 +29,29 @@ void InformationExtractor::start(){
 
     int LineNumber = 0;
 
-    int scheme_prog_code = 0;
+    std::string scheme_prog_code;
     std::string prog_name;
-    long scheme_id = 0;
+    std::string scheme_id;
     std::string prog_sem_year;
     std::string prepared_date;
     std::string declared_date;
-    int institute_code = 0;
+    std::string institute_code;
     std::string institution_name;
-    int batch = 0;
+    std::string batch;
     std::string examination;
 
-    long roll_number;
+    std::string roll_number;
     std::string name;
-    long sid;
-    long result_scheme_id;
+    string sid;
+    string result_scheme_id;
 
-    int paperCode;
-    int credit;
-    int minor;
-    int major;
-    int total;
+    std::string paper_code;
+    std::string credit;
+    std::string minor;
+    std::string major;
+    std::string total;
+
+    bool newLine;
 
     enum what_parsed_last {
         RTSID, RollNumber, Name, SID, SchemeID, PaperCode, Minor_Major, Total, Credits
@@ -59,12 +61,13 @@ void InformationExtractor::start(){
 
     while(std::getline(inputFile, line)){
 
+        newLine = true;
+
         LineNumber++;
 
         size_t pos;
 
         if (scheme) {
-
 
             size_t posi = line.find("Scheme of Programme Code:");
 
@@ -75,14 +78,13 @@ void InformationExtractor::start(){
                 while (line[posi] == ' ')
                     posi++;
 
-                scheme_prog_code = 0;
+                scheme_prog_code = "";
                 while (line[posi] >= '0' && line[posi] <= '9') {
-                    scheme_prog_code *= 10;
-                    scheme_prog_code += (line[posi] - '0');
+                    scheme_prog_code += (line[posi]);
                     posi++;
                 }
 
-                if (scheme_prog_code == 0) {
+                if (scheme_prog_code.length() <= 1) {
                     string message = "Scheme of Programme Code not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -121,14 +123,13 @@ void InformationExtractor::start(){
                 while (line[posi_sch] == ' ')
                     posi_sch++;
 
-                scheme_id = 0;
+                scheme_id = "";
                 while (line[posi_sch] >= '0' && line[posi_sch] <= '9') {
-                    scheme_id *= 10;
-                    scheme_id += (line[posi_sch] - '0');
+                    scheme_id += (line[posi_sch]);
                     posi_sch++;
                 }
 
-                if (scheme_id == 0) {
+                if (scheme_id.length() <= 1) {
                     string message =  "SchemeID not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -211,14 +212,13 @@ void InformationExtractor::start(){
                 while (line[posi_insti_code] == ' ')
                     posi_insti_code++;
 
-                institute_code = 0;
+                institute_code = "";
                 while (line[posi_insti_code] >= '0' && line[posi_insti_code] <= '9') {
-                    institute_code *= 10;
-                    institute_code += (line[posi_insti_code] - '0');
+                    institute_code += (line[posi_insti_code]);
                     posi_insti_code++;
                 }
 
-                if (institute_code == 0) {
+                if (institute_code.length() <= 1) {
                     string message =  "Scheme of Programme not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -251,34 +251,32 @@ void InformationExtractor::start(){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
-                    int s_no;
-                    int paper_id;
+                    std::string s_no;
+                    std::string paper_id;
                     std::string paper_code;
                     std::string subject_name;
-                    int credits;
+                    std::string credits;
                     std::string type;
                     std::string exam;
                     std::string mode;
                     std::string kind;
-                    int minor;
-                    int major;
-                    int max_marks;
-                    int pass_marks;
+                    std::string minor;
+                    std::string major;
+                    std::string max_marks;
+                    std::string pass_marks;
 
-                    s_no = 0;
+                    s_no = "";
                     do {
-                        s_no *= 10;
-                        s_no += line[position] - '0';
+                        s_no += line[position];
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
                     while(line[position]==' ')
                         position++;
 
-                    paper_id = 0;
+                    paper_id = "";
                     do {
-                        paper_id *= 10;
-                        paper_id += line[position] - '0';
+                        paper_id += line[position];
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
@@ -298,17 +296,17 @@ void InformationExtractor::start(){
                     do {
                         subject_name += line[position];
                         position++;
-                    }while(((line[position] != ' ') && (line[position+1] != ' '))
-                           || (((line[position] != ' ')) &&
-                            ((line[position+1]>='0' && line[position+1]<='9'))));
+                    }while(!((line[position] == ' ') &&
+                            (line[position+1]>='0' && line[position+1]<='9')));
+
+                    subject_name = trim(subject_name);
 
                     while(line[position]==' ')
                         position++;
 
-                    credits = 0;
+                    credits = "";
                     do {
-                        credits *= 10;
-                        credits += line[position]-'0';
+                        credits += line[position];
                         position++;
                     }while((line[position]>='0' && line[position]<='9'));
 
@@ -351,14 +349,12 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    minor = 0;
                     if(line[position]=='-' && line[position+1]=='-')
-                        minor = 0;
+                        minor = "0";
                     else{
-                        minor = 0;
+                        minor = "";
                         do {
-                            minor *= 10;
-                            minor += line[position]-'0';
+                            minor += line[position];
                             position++;
                         }while((line[position]>='0' && line[position]<='9'));
                     }
@@ -366,14 +362,12 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    major = 0;
                     if(line[position]=='-' && line[position+1]=='-')
-                        major = 0;
+                        major = "0";
                     else{
-                        major = 0;
+                        major = "";
                         do {
-                            major *= 10;
-                            major += line[position]-'0';
+                            major += line[position];
                             position++;
                         }while((line[position]>='0' && line[position]<='9'));
                     }
@@ -381,14 +375,12 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    max_marks = 0;
                     if(line[position]=='-' && line[position+1]=='-')
-                        max_marks = 0;
+                        max_marks = "0";
                     else{
-                        max_marks = 0;
+                        max_marks = "";
                         do {
-                            max_marks *= 10;
-                            max_marks += line[position]-'0';
+                            max_marks += line[position];
                             position++;
                         }while((line[position]>='0' && line[position]<='9'));
                     }
@@ -396,14 +388,12 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    pass_marks = 0;
                     if(line[position]=='-' && line[position+1]=='-')
-                        pass_marks = 0;
+                        pass_marks = "0";
                     else{
-                        pass_marks = 0;
+                        pass_marks = "";
                         do {
-                            pass_marks *= 10;
-                            pass_marks += line[position]-'0';
+                            pass_marks += line[position];
                             position++;
                         }while((line[position]>='0' && line[position]<='9'));
                     }
@@ -440,13 +430,13 @@ void InformationExtractor::start(){
                 while (line[posi] == ' ')
                     posi++;
 
+                scheme_prog_code = "";
                 while (line[posi] >= '0' && line[posi] <= '9') {
-                    scheme_prog_code *= 10;
-                    scheme_prog_code += (line[posi] - '0');
+                    scheme_prog_code += (line[posi]);
                     posi++;
                 }
 
-                if (scheme_prog_code == 0) {
+                if (scheme_prog_code.length() <= 1) {
                     string message = "Result of Programme Code not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -554,14 +544,13 @@ void InformationExtractor::start(){
                 while (line[posi_batch] == ' ')
                     posi_batch++;
 
-                batch = 0;
+                batch = "";
                 while (line[posi_batch] >= '0' && line[posi_batch] <= '9') {
-                    batch *= 10;
-                    batch += (line[posi_batch] - '0');
+                    batch += (line[posi_batch]);
                     posi_batch++;
                 }
 
-                if (batch == 0) {
+                if (batch.length() <= 1) {
                     string message =  "Batch not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -600,14 +589,13 @@ void InformationExtractor::start(){
                 while (line[posi_insti_code] == ' ')
                     posi_insti_code++;
 
-                institute_code = 0;
+                institute_code = "";
                 while (line[posi_insti_code] >= '0' && line[posi_insti_code] <= '9') {
-                    institute_code *= 10;
-                    institute_code += (line[posi_insti_code] - '0');
+                    institute_code += (line[posi_insti_code]);
                     posi_insti_code++;
                 }
 
-                if (institute_code == 0) {
+                if (institute_code.length() <= 1) {
                     string message =  "Scheme of Programme not found At LineNumber ";
                     throw std::runtime_error(message.c_str());
                 }
@@ -640,28 +628,29 @@ void InformationExtractor::start(){
                 stateHolder = RTSID;
             }
 
-            if(line.find("<p><b>")==0){
+            if(line.find("<p><b>")==0 && newLine){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
 
-                    if(stateHolder == RTSID || stateHolder == credit){
+                    if(stateHolder == RTSID || stateHolder == Credits){
 
-                        roll_number = 0;
+                        roll_number = "";
                         do {
-                            roll_number *= 10;
-                            roll_number += line[position]-'0';
+                            roll_number += line[position];
                             position++;
                         }while(line[position]>='0' && line[position]<='9');
 
                         stateHolder = RollNumber;
+
+                        newLine = false;
 
                     }
                 }
 
             }
 
-            if(line.find("<p><b>")==0){
+            if(line.find("<p><b>")==0 && newLine){
                 size_t position = 6;
 
                 if(line[position]>='A' && line[position]<='Z') {
@@ -689,10 +678,9 @@ void InformationExtractor::start(){
 
                 if(stateHolder==Name){
 
-                    sid = 0;
+                    sid = "";
                     do {
-                        sid *= 10;
-                        sid += line[position]-'0';
+                        sid += line[position];
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
@@ -701,6 +689,7 @@ void InformationExtractor::start(){
                 }
 
             }
+
             if(line.find("<p><b>SchemeID:")!=std::string::npos){
                 size_t position = 15;
 
@@ -709,10 +698,9 @@ void InformationExtractor::start(){
 
                 if(stateHolder==SID){
 
-                    result_scheme_id = 0;
+                    result_scheme_id = "";
                     do {
-                        result_scheme_id *= 10;
-                        result_scheme_id += line[position]-'0';
+                        result_scheme_id += line[position];
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
@@ -722,19 +710,19 @@ void InformationExtractor::start(){
 
             }
 
-            if(line.find("<p><b>")==0){
+            if(line.find("<p><b>")==0 && newLine){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
                     size_t openBrak;
                     if((stateHolder == SchemeID || stateHolder == Total)
                        &&  ((openBrak=line.find('('))!=std::string::npos)
-                       && (line[openBrak+1]>=0 && line[openBrak+1]<=9)){
+                       && (line[openBrak+1]>='0' && line[openBrak+1]<='9')){
 
-                        paperCode = 0;
+
+                        paper_code = "";
                         do {
-                            paperCode *= 10;
-                            paperCode += line[position]-'0';
+                            paper_code += line[position];
                             position++;
                         }while(line[position]>='0' && line[position]<='9');
 
@@ -744,35 +732,35 @@ void InformationExtractor::start(){
                         }
                         position++;
 
-                        credit = 0;
+                        credit = "";
                         do {
-                            credit *= 10;
-                            credit += line[position]-'0';
+                            credit += line[position];
                             position++;
                         }while(line[position]>='0' && line[position]<='9');
 
                         stateHolder = PaperCode;
+
+                        newLine = false;
 
                     }
                 }
 
             }
 
-            if(line.find("<p><b>")==0) {
+            if(line.find("<p><b>")==0 && newLine) {
                 size_t position = 6;
 
                 while(line[position]==' ')
                     position++;
 
-                if(stateHolder == paperCode){
+                if(stateHolder == PaperCode){
 
                     if(line[position]=='-'){
-                        minor = 0;
+                        minor = "0";
                     }else {
-                        minor = 0;
+                        minor = "";
                         do {
-                            minor *= 10;
-                            minor += line[position] - '0';
+                            minor += line[position];
                             position++;
                         } while (line[position] >= '0' && line[position] <= '9');
                     }
@@ -781,21 +769,22 @@ void InformationExtractor::start(){
                         position++;
 
                     if(line[position]=='-'){
-                        major = 0;
+                        major = "0";
                     }else {
-                        major = 0;
+                        major = "";
                         do {
-                            major *= 10;
-                            major += line[position] - '0';
+                            major += line[position];
                             position++;
                         } while (line[position] >= '0' && line[position] <= '9');
                     }
 
                     stateHolder = Minor_Major;
 
+                    newLine = false;
+
                 }
 
-                if(line.find("<p><b>")==0) {
+                if(line.find("<p><b>")==0 && newLine) {
                     size_t position = 6;
 
                     while (line[position] == ' ')
@@ -803,28 +792,30 @@ void InformationExtractor::start(){
 
                     if (stateHolder == Minor_Major) {
 
-                        total = 0;
+                        total = "";
                         do {
-                            total *= 10;
-                            total += line[position] - '0';
+                            total += line[position];
                             position++;
                         } while (line[position] >= '0' && line[position] <= '9');
 
                         stateHolder = Total;
 
+                        newLine = false;
+
                         InformationHolder * informationHolder = InformationHolder::get();
                         informationHolder->insert_result(scheme_prog_code, prepared_date,
-                                declared_date, prog_name, prog_sem_year,  batch,
-                                examination, institute_code, institution_name, roll_number,
-                                name, sid, result_scheme_id, paperCode, credit, minor,
-                                major, total);
+                                                         declared_date, prog_name, prog_sem_year,  batch,
+                                                         examination, institute_code, institution_name, roll_number,
+                                                         name, sid, result_scheme_id, paper_code, credit, minor,
+                                                         major, total);
 
 
                     }
 
                 }
 
-                if(line.find("<p><b>")==0) {
+
+                if(line.find("<p><b>")==0 && newLine) {
                     size_t position = 6;
 
                     while (line[position] == ' ')
@@ -840,6 +831,8 @@ void InformationExtractor::start(){
                         } while (line[position] >= '0' && line[position] <= '9');
 
                         stateHolder = Credits;
+
+                        newLine = false;
 
                     }
                 }
