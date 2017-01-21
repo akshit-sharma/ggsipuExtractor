@@ -222,8 +222,8 @@ void OnlineFilesDownload::trimPDFLinks(std::set<std::string> &list_of_files, std
         char c = buffer[i];
 
         if(c=='h' && buffer[i+1]=='r' && buffer[i+2]=='e' && buffer[i+3]=='f'){
-            start = table.find('"',i);
-            end = table.find('"',start+1);
+            start = table.find('"',i) + 1;
+            end = table.find('"',start);
             string partialName = table.substr(start,end-start);
             if(partialName.find("pdf")!=std::string::npos)
                 list_of_files.insert(getCorrectFileURL(partialName,url));
