@@ -398,6 +398,27 @@ void InformationExtractor::start(){
                         }while((line[position]>='0' && line[position]<='9'));
                     }
 
+                    replaceAll(scheme_prog_code,","," ");
+                    replaceAll(scheme_id,","," ");
+                    replaceAll(prog_sem_year,","," ");
+                    replaceAll(prepared_date,","," ");
+                    replaceAll(declared_date,","," ");
+                    replaceAll(institute_code,","," ");
+                    replaceAll(institution_name,","," ");
+                    replaceAll(s_no,","," ");
+                    replaceAll(paper_id,","," ");
+                    replaceAll(paper_code,","," ");
+                    replaceAll(subject_name,","," ");
+                    replaceAll(credits,","," ");
+                    replaceAll(type,","," ");
+                    replaceAll(exam,","," ");
+                    replaceAll(mode,","," ");
+                    replaceAll(kind,","," ");
+                    replaceAll(minor,","," ");
+                    replaceAll(major,","," ");
+                    replaceAll(max_marks,","," ");
+                    replaceAll(pass_marks,","," ");
+
                     InformationHolder * informationHolder = InformationHolder::get();
                     informationHolder->insert_scheme(scheme_prog_code,prog_name,scheme_id, prog_sem_year,
                                                         prepared_date, declared_date, institute_code, institution_name,
@@ -820,6 +841,30 @@ void InformationExtractor::start(){
 
                         newLine = false;
 
+
+                        replaceAll(scheme_prog_code,","," ");
+                        replaceAll(prepared_date,","," ");
+                        replaceAll(declared_date,","," ");
+                        replaceAll(prog_name,","," ");
+                        replaceAll(prog_sem_year,","," ");
+                        replaceAll(batch,","," ");
+                        replaceAll(examination,","," ");
+                        replaceAll(institute_code,","," ");
+                        replaceAll(institution_name,","," ");
+                        replaceAll(roll_number,","," ");
+                        replaceAll(name,","," ");
+                        replaceAll(sid,","," ");
+                        replaceAll(result_scheme_id,","," ");
+                        replaceAll(paper_code,","," ");
+                        replaceAll(credit,","," ");
+                        replaceAll(minor,","," ");
+                        replaceAll(major,","," ");
+                        replaceAll(total,","," ");
+
+                        if(prog_name.find("Sem.")!=std::string::npos){
+                            prog_name = prog_name.substr(0,prog_name.find("Sem."));
+                        }
+
                         InformationHolder * informationHolder = InformationHolder::get();
                         informationHolder->insert_result(scheme_prog_code, prepared_date,
                                                          declared_date, prog_name, prog_sem_year,  batch,
@@ -893,4 +938,14 @@ string InformationExtractor::trim(const string& str)
 
 bool InformationExtractor::both_false(){
     return scheme || result;
+}
+
+void InformationExtractor::replaceAll(std::string& str, const std::string& from, const std::string& to) {
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
 }
