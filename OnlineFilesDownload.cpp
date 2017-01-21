@@ -91,31 +91,55 @@ void OnlineFilesDownload::filesAvailable(){
 
 
     for(set<string>::iterator iter = list_of_files.begin();
-            iter != list_of_files.end();    ++iter){
+            iter != list_of_files.end();    ++iter) {
 
-        if(!GlobalSetting::get()->skip_file_download) {
+        int returnValue;
+
+        if (!GlobalSetting::get()->skip_file_download) {
             char temp[FILENAME_MAX];
             strcpy(temp, downloadFileName.c_str());
             cout << "Downloading " << *iter << endl;
             download_file(temp, (*iter).c_str());
         }
 
-        if(!GlobalSetting::get()->skip_file_convert) {
-            system(command_full.c_str());
+        returnValue = 0;
+        if (!GlobalSetting::get()->skip_file_convert) {
+            returnValue = system(command_full.c_str());
         }
 
         try {
             InformationExtractor informationExtractor(outputFile);
             informationExtractor.start();
-        }catch (runtime_error){
+        } catch (runtime_error) {
             perror("Handing runtime error and continuing next ... \n");
-            std::string message_err = "Error in file "+ *iter+"\n";
+            std::string message_err = "Error in file " + *iter + "\n";
             perror(message_err.c_str());
         }
+
+
+        if (exists_test1(downloadFileName)) {
+            if (remove(downloadFileName.c_str()) != 0)
+                perror("Error deleting pdf file");
+        }
+
+        if (exists_test1(outputFile)) {
+            if (remove(outputFile.c_str()) != 0)
+                perror("Error deleting html file");
+        }
+
 
     }
 
 
+}
+
+inline bool OnlineFilesDownload::exists_test1 (const std::string& name) {
+    if (FILE *file = fopen(name.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 std::string OnlineFilesDownload::sendRequest(const char * site) {
