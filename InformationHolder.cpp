@@ -86,7 +86,7 @@ void InformationHolder::open_file_result() {
 
     result_stream<<"scheme_prog_code,prepared_date,declared_date,prog_name,prog_sem_year,";
     result_stream<<"batch,examination,institute_code,institute_name,rollnumber,name,sid,";
-    result_stream<<"result_scheme_id,credit,minor,major,total"<<std::endl;
+    result_stream<<"result_scheme_id,paper_code,credit,minor,major,total"<<std::endl;
 
 }
 void InformationHolder::insert_result(std::string scheme_prog_code, std::string prepared_date, std::string declared_date,
