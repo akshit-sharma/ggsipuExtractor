@@ -18,6 +18,7 @@ private:
     static void replaceAll(std::string& str, const std::string& from, const std::string& to);
     int download_file(char *outfilename, const char *url);
     inline bool exists_test1 (const std::string& name);
+    std::string url_encode(const std::string &value);
 
 public:
     OnlineFilesDownload();

@@ -54,10 +54,10 @@ void InformationExtractor::start(){
     bool newLine;
 
     enum what_parsed_last {
-        RTSID, RollNumber, Name, SID, SchemeID, PaperCode, Minor_Major, Total, Credits
+        Initialize, RTSID, RollNumber, Name, SID, SchemeID, PaperCode, Minor_Major, Total, Credits
     };
 
-    enum what_parsed_last stateHolder;
+    enum what_parsed_last stateHolder = Initialize;
 
     while(std::getline(inputFile, line)){
 
@@ -443,11 +443,12 @@ void InformationExtractor::start(){
 
             }
 
-            size_t posi_pre_date = line.find("Result Prepared on:");
+            size_t posi_pre_date = line.find("Prepared");
 
             if (posi_pre_date != std::string::npos) {
 
-                posi_pre_date += strlen("Result Prepared on:");
+                posi_pre_date = line.find(":");
+                posi_pre_date += strlen(":");
 
                 while (line[posi_pre_date] == ' ')
                     posi_pre_date++;
@@ -465,11 +466,12 @@ void InformationExtractor::start(){
 
             }
 
-            size_t posi_dec_date = line.find("Result Declared on:");
+            size_t posi_dec_date = line.find("Declared");
 
             if (posi_dec_date != std::string::npos) {
 
-                posi_dec_date += strlen("Result Declared on:");
+                posi_dec_date = line.find(":");
+                posi_dec_date += strlen(":");
 
                 while (line[posi_dec_date] == ' ')
                     posi_dec_date++;
@@ -628,8 +630,16 @@ void InformationExtractor::start(){
                 stateHolder = RTSID;
             }
 
-            if(line.find("<p><b>")==0 && newLine){
-                size_t position = 6;
+            {
+                size_t position = 0;
+                if(line.find("<p><b>")==0 && newLine) {
+                    position = 6;
+                }else{
+                    position = 0;
+                }
+
+                while (line[position] == ' ')
+                    position++;
 
                 if(line[position]>='0' && line[position]<='9') {
 
@@ -650,28 +660,36 @@ void InformationExtractor::start(){
 
             }
 
-            if(line.find("<p><b>")==0 && newLine){
-                size_t position = 6;
+            {
+                size_t position;
+                if (line.find("<p><b>") == 0 && newLine) {
+                    position = 6;
+                } else {
+                    position = 0;
+                }
 
-                if(line[position]>='A' && line[position]<='Z') {
+                while (line[position] == ' ')
+                    position++;
 
-                    if(stateHolder == RollNumber){
+                if (line[position] >= 'A' && line[position] <= 'Z') {
+
+                    if (stateHolder == RollNumber) {
 
                         name = "";
                         do {
                             name += line[position];
                             position++;
-                        }while(line[position]!='\0');
+                        } while (line[position] != '\0');
 
                         stateHolder = Name;
 
                     }
                 }
-
             }
 
+
             if(line.find("<p><b>SID:")!=std::string::npos){
-                size_t position = 10;
+                size_t position = line.find("SID:") + strlen("SID:");
 
                 while(line[position]==' ')
                     position++;
@@ -690,8 +708,8 @@ void InformationExtractor::start(){
 
             }
 
-            if(line.find("<p><b>SchemeID:")!=std::string::npos){
-                size_t position = 15;
+            if(line.find("SchemeID:")!=std::string::npos){
+                size_t position = line.find("SchemeID:") + strlen("SchemeID:");
 
                 while(line[position]==' ')
                     position++;

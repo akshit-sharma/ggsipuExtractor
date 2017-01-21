@@ -11,6 +11,8 @@
 #include <set>
 #include <unistd.h>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "OnlineFilesDownload.h"
 #include "GlobalSetting.h"
@@ -270,6 +272,7 @@ std::string OnlineFilesDownload::getCorrectFileURL(std::string file, const char 
     std::string full_url;
 
     OnlineFilesDownload::replaceAll(file,"&amp;","&");
+    OnlineFilesDownload::replaceAll(file,"&#8211;","-");
 
     if(file.find("http://") != std::string::npos ){
         full_url = file;
@@ -281,7 +284,39 @@ std::string OnlineFilesDownload::getCorrectFileURL(std::string file, const char 
 
 //    cout<<"adding "<<full_url<<endl;
 
-    return full_url;
+    return url_encode(full_url);
+}
+
+
+std::string OnlineFilesDownload::url_encode(const std::string &value) {
+    ostringstream escaped;
+    escaped.fill('0');
+    escaped << hex;
+
+    for (string::const_iterator i = value.begin(), n = value.end(); i != n; ++i) {
+        string::value_type c = (*i);
+
+        // Keep alphanumeric and other accepted characters intact
+        if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~' || c == ':' || c == '/') {
+            escaped << c;
+            continue;
+        }
+
+        if(c == '%'){
+            escaped << c;
+            escaped << *(i+1);
+            escaped << *(i+2);
+            i += 2;
+            continue;
+        }
+
+        // Any other characters are percent-encoded
+        escaped << uppercase;
+        escaped << '%' << setw(2) << int((unsigned char) c);
+        escaped << nouppercase;
+    }
+
+    return escaped.str();
 }
 
 void OnlineFilesDownload::replaceAll(std::string& str, const std::string& from, const std::string& to) {
