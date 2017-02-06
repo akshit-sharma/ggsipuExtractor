@@ -397,7 +397,9 @@ void InformationExtractor::start(){
                             position++;
                         }while((line[position]>='0' && line[position]<='9'));
                     }
-
+                    
+                    replaceAll(institution_name,"&amp;","&");
+                    replaceAll(subject_name,"&amp;","&");
                     replaceAll(scheme_prog_code,","," ");
                     replaceAll(scheme_id,","," ");
                     replaceAll(prog_sem_year,","," ");
@@ -843,6 +845,7 @@ void InformationExtractor::start(){
 
 
                         replaceAll(institution_name,"&amp;","&");
+                        replaceAll(prog_name,"&amp;","&");
                         replaceAll(scheme_prog_code,","," ");
                         replaceAll(prepared_date,","," ");
                         replaceAll(declared_date,","," ");
