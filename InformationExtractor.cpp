@@ -842,6 +842,7 @@ void InformationExtractor::start(){
                         newLine = false;
 
 
+                        replaceAll(institution_name,"&amp;","&");
                         replaceAll(scheme_prog_code,","," ");
                         replaceAll(prepared_date,","," ");
                         replaceAll(declared_date,","," ");
