@@ -65,6 +65,8 @@ void OnlineFilesDownload::filesAvailable(){
 
     if(!GlobalSetting::get()->skip_jdk_download) {
         system("wget --no-cookies --no-check-certificate --header \"Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense\" \"http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jdk-8u112-linux-x64.tar.gz\"");
+    }
+    if(!GlobalSetting::get()->skip_jdk_extract){
         system("tar xf jdk-8u112-linux-x64.tar.gz");
     }
 
