@@ -116,7 +116,7 @@ void OnlineFilesDownload::filesAvailable(){
             informationExtractor.start();
         } catch (runtime_error) {
             perror("Handing runtime error and continuing next ... \n");
-            std::string message_err = "Error in file " + *iter + "\n";
+            std::string message_err = "Error from parsing file " + *iter + "\n";
             perror(message_err.c_str());
         }
 
