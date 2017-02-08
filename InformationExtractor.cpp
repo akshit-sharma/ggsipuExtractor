@@ -5,12 +5,11 @@
 #include <cstring>
 #include <iostream>
 #include <set>
+#include <stack>
 #include "InformationExtractor.h"
 #include "InformationHolder.h"
 
-
 using namespace std;
-
 
 InformationExtractor::InformationExtractor(string outputFile) {
 
@@ -251,6 +250,7 @@ void InformationExtractor::start(){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
+                    std::stack has_more;
                     std::string s_no;
                     std::string paper_id;
                     std::string paper_code;
@@ -296,26 +296,38 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    subject_name = "";
                     do {
-                        subject_name += line[position];
-                        position++;
-                    }while(!((line[position] == ' ') &&
-                            (line[position+1]>='0' && line[position+1]<='9')));
+                        has_more.empty();
+                        subject_name = "";
+                        do {
+                            subject_name += line[position];
+                            position++;
+                            if (line[position] == '(')
+                                has_more.push('(');
+                            if (line[position] == ')')
+                                has_more.pop();
+                        } while (!((line[position] == ' ') &&
+                                   (line[position + 1] >= '0' && line[position + 1] <= '9'))
+                                 && has_more.size() == 0);
 
-                    subject_name = trim(subject_name);
+                        subject_name = trim(subject_name);
 
-                    while(line[position]==' ')
-                        position++;
+                        while (line[position] == ' ')
+                            position++;
 
-                    credits = "";
-                    do {
-                        credits += line[position];
-                        position++;
-                    }while((line[position]>='0' && line[position]<='9'));
+                        credits = "";
+                        do {
+                            credits += line[position];
+                            position++;
+                        } while ((line[position] >= '0' && line[position] <= '9'));
 
-                    while(line[position]==' ')
-                        position++;
+                        while (line[position] == ' ')
+                            position++;
+
+                        if (line[position] == '(') {
+                            subject_name += " " + credits + " ";
+                        }
+                    }while(line[position]=='(');
 
                     type = "";
                     do {
@@ -440,8 +452,8 @@ void InformationExtractor::start(){
                      || line[0]=='\0'){
 
             }else{
-                string message = "Parser not ready for this file not found At LineNumber ";
-                cout<<message<<endl;
+                std::string message = "Parser not ready for this file not found At LineNumber ";
+                std::cout<<message<<std::endl;
 //                throw std::runtime_error(message.c_str());
             }
 
