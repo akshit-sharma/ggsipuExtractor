@@ -1,4 +1,4 @@
-//
+    //
 // Created by akshit on 20/1/17.
 //
 
@@ -287,7 +287,11 @@ void InformationExtractor::start(){
                     do {
                         paper_code += line[position];
                         position++;
-                    }while(line[position] != ' ');
+                    }while(!(line[position]>='0' && line[position]<='9'));
+                    do {
+                        paper_code += line[position];
+                        position++;
+                    }while((line[position]>='0' && line[position]<='9'));
 
                     while(line[position]==' ')
                         position++;
