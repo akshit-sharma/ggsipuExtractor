@@ -404,6 +404,7 @@ void InformationExtractor::start(){
                     
                     replaceAll(institution_name,"&amp;","&");
                     replaceAll(subject_name,"&amp;","&");
+                    replaceAll(prog_name,"&amp;","&");
                     replaceAll(scheme_prog_code,","," ");
                     replaceAll(prog_name,","," ");
                     replaceAll(scheme_id,","," ");
