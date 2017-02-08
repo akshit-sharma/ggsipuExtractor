@@ -250,7 +250,7 @@ void InformationExtractor::start(){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
-                    std::stack has_more;
+                    std::stack<char> has_more;
                     std::string s_no;
                     std::string paper_id;
                     std::string paper_code;
