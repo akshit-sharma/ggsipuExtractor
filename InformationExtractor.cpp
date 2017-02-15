@@ -86,7 +86,7 @@ void InformationExtractor::start(){
                 if (scheme_prog_code.length() <= 1) {
                     string message = "Scheme of Programme Code not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -112,7 +112,7 @@ void InformationExtractor::start(){
                 if (prog_name.length() <= 1) {
                     string message = "Programme Name not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -137,7 +137,7 @@ void InformationExtractor::start(){
                 if (scheme_id.length() <= 1) {
                     string message =  "SchemeID not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -162,7 +162,7 @@ void InformationExtractor::start(){
                 if (prog_sem_year.length()<=3) {
                     string message = "Sem./Year not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -188,7 +188,7 @@ void InformationExtractor::start(){
                 if (prepared_date.length() <= 1) {
                     string message = "Prepared date not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -213,7 +213,7 @@ void InformationExtractor::start(){
                 if (declared_date.length() <= 1) {
                     string message = "Declared date not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -238,7 +238,7 @@ void InformationExtractor::start(){
                 if (institute_code.length() <= 1) {
                     string message =  "Scheme of Programme not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -263,7 +263,7 @@ void InformationExtractor::start(){
                 if (institution_name.length() <= 1) {
                     string message = "Institution name not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -476,12 +476,12 @@ void InformationExtractor::start(){
                      || line[0]=='\0'){
 
             }else{
-                std::string message = "Parser not ready for this file not found At LineNumber ";
-                message += std::to_string(__LINE__);
-                message += " of file ";
-                message += __FILE__;
-                message += "for file ";
-                std::cout<<message<<std::endl;
+//                std::string message = "Parser not ready for this file not found At LineNumber ";
+//                message += std::to_string(__LINE__);
+//                message += "\n of file ";
+//                message += __FILE__;
+//                message += "\n for file ";
+//                std::cout<<message<<std::endl;
 //                throw std::runtime_error(message.c_str());
             }
 
@@ -508,7 +508,7 @@ void InformationExtractor::start(){
                 if (scheme_prog_code.length() <= 1) {
                     string message = "Result of Programme Code not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -534,7 +534,7 @@ void InformationExtractor::start(){
                 if (prepared_date.length() <= 1) {
                     string message = "Result prepared date not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -560,7 +560,7 @@ void InformationExtractor::start(){
                 if (declared_date.length() <= 1) {
                     string message = "Result declared date not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -587,7 +587,7 @@ void InformationExtractor::start(){
                 if (prog_name.length() <= 1) {
                     string message = "Programme Name not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -613,7 +613,7 @@ void InformationExtractor::start(){
                 if (prog_sem_year.length()<=3) {
                     string message = "Sem./Year not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -639,7 +639,7 @@ void InformationExtractor::start(){
                 if (batch.length() <= 1) {
                     string message =  "Batch not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -664,7 +664,7 @@ void InformationExtractor::start(){
                 if (examination.length()<=3) {
                     string message = "Examination not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -690,7 +690,7 @@ void InformationExtractor::start(){
                 if (institute_code.length() <= 1) {
                     string message =  "Scheme of Programme not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -715,7 +715,7 @@ void InformationExtractor::start(){
                 if (institution_name.length() <= 1 ) {
                     string message = "Institution name not found At LineNumber ";
                     message += std::to_string(__LINE__);
-                    message += " of file ";
+                    message += "\n of file ";
                     message += __FILE__;
                     throw std::runtime_error(message.c_str());
                 }
@@ -843,7 +843,7 @@ void InformationExtractor::start(){
                         if(line[position]!='('){
                             string message = "Paper code not found At LineNumber ";
                             message += std::to_string(__LINE__);
-                            message += " of file ";
+                            message += "\n of file ";
                             message += __FILE__;
                             throw std::runtime_error(message.c_str());
                         }

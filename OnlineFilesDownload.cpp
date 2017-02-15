@@ -2,6 +2,7 @@
 // Created by akshi on 1/18/2017.
 //
 
+#include <openssl/md5.h>
 #include <curl/curl.h>
 #include <sys/stat.h>
 #include <iostream>
@@ -27,6 +28,7 @@ OnlineFilesDownload::OnlineFilesDownload() {
     GlobalSetting * gs = GlobalSetting::get();
 
     _mkdir((gs->getDownloadLocation()+"/pdfs").c_str());
+    _mkdir((gs->getDownloadLocation()+"/html").c_str());
 
 }
 
@@ -95,9 +97,9 @@ void OnlineFilesDownload::filesAvailable(){
         string temp_name = (*iter).substr((*iter).find_last_of("\\/")+1);
         temp_name = fileName_encode(temp_name);
 
-        string downloadFileName = GlobalSetting::get()->getDownloadLocation()+"/pdfs/"+temp_name;
+        string downloadFileName = GlobalSetting::get()->getDownloadLocation()+"/pdfs/"+temp_name+".pdf";
 
-        string outputFile = GlobalSetting::get()->getDownloadLocation()+"/html/"+temp_name;
+        string outputFile = GlobalSetting::get()->getDownloadLocation()+"/html/"+temp_name+".html";
 
         string command_full = command_name + command_cmd + command_options + downloadFileName + " " + outputFile;
 
@@ -111,29 +113,49 @@ void OnlineFilesDownload::filesAvailable(){
 
         returnValue = 0;
         if (!GlobalSetting::get()->skip_file_convert) {
+            std::cout<<"Executing cmd : "<<std::endl;
+            std::cout<<command_full<<std::endl;
             returnValue = system(command_full.c_str());
-        }
-
-        try {
-            InformationExtractor informationExtractor(outputFile);
-            informationExtractor.start();
-        } catch (runtime_error) {
-            perror("Handing runtime error and continuing next ... \n");
-            std::string message_err = "Error from parsing file " + *iter + "\n";
-            perror(message_err.c_str());
-
-            if(!GlobalSetting::get()->skip_interactive_mode){
-                char input;
-                std::fflush(stderr);
-                std::cout<<"Press c to continue : ";
-                std::fflush(stdout);
-                std::cin>>input;
-                if(input!='c' || input!='C')
-                    break;
+            if(returnValue!=0){
+                std::cout<<"Value of return is "<<returnValue<<std::endl;
+                if(!GlobalSetting::get()->skip_interactive_mode){
+                    char input;
+                    std::fflush(stderr);
+                    std::cout<<"Press c to continue : ";
+                    std::fflush(stdout);
+                    std::cin>>input;
+                    if(input!='c' || input!='C')
+                        break;
+                }else{
+                    perror("Handing parsing error and continuing next ... \n");
+                    std::fflush(stderr);
+                }
             }
-
         }
 
+        if(returnValue==0) {
+            try {
+                InformationExtractor informationExtractor(outputFile);
+                informationExtractor.start();
+            } catch (runtime_error) {
+                std::string message_err = "Error from parsing file " + *iter + "\n";
+                perror(message_err.c_str());
+
+                if (!GlobalSetting::get()->skip_interactive_mode) {
+                    char input;
+                    std::fflush(stderr);
+                    std::cout << "Press c to continue : ";
+                    std::fflush(stdout);
+                    std::cin >> input;
+                    if (input != 'c' || input != 'C')
+                        break;
+                } else {
+                    perror("Handing runtime error and continuing next ... \n");
+                    std::fflush(stderr);
+                }
+
+            }
+        }
 
         if (exists_test1(downloadFileName)) {
             if (remove(downloadFileName.c_str()) != 0)
@@ -336,34 +358,16 @@ std::string OnlineFilesDownload::url_encode(const std::string &value) {
 }
 
 std::string OnlineFilesDownload::fileName_encode(const std::string &value) {
-    ostringstream escaped;
-    escaped.fill('0');
-    escaped << hex;
+    unsigned char result[MD5_DIGEST_LENGTH];
+    MD5((unsigned char*)value.c_str(), value.size(), result);
 
-    for (string::const_iterator i = value.begin(), n = value.end(); i != n; ++i) {
-        string::value_type c = (*i);
-
-        // Keep alphanumeric and other accepted characters intact
-        if (isalnum(c) || c == '.') {
-            escaped << c;
-            continue;
-        }
-
-        if(c == '_'){
-            escaped << c;
-            escaped << *(i+1);
-            escaped << *(i+2);
-            i += 2;
-            continue;
-        }
-
-        // Any other characters are percent-encoded
-        escaped << uppercase;
-        escaped << '_' << setw(2) << int((unsigned char) c);
-        escaped << nouppercase;
+    std::ostringstream sout;
+    sout<<std::hex<<std::setfill('0');
+    for(long long c: result)
+    {
+        sout<<std::setw(2)<<(long long)c;
     }
-
-    return escaped.str();
+    return sout.str();
 }
 
 void OnlineFilesDownload::replaceAll(std::string& str, const std::string& from, const std::string& to) {
