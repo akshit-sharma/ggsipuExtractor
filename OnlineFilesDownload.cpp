@@ -87,22 +87,25 @@ void OnlineFilesDownload::filesAvailable(){
     string command_cmd = "ExtractText ";
     string command_options = "-html ";
 
-    string downloadFileName = GlobalSetting::get()->getDownloadLocation()+"/pdfs/result.pdf";
-
-    string outputFile = GlobalSetting::get()->getDownloadLocation()+"/htmlForm.html";
-
-    string command_full = command_name + command_cmd + command_options + downloadFileName + " " + outputFile;
-
-
     for(set<string>::iterator iter = list_of_files.begin();
             iter != list_of_files.end();    ++iter) {
 
         int returnValue;
 
+        string temp_name = (*iter).substr((*iter).find_last_of("\\/")+1);
+        temp_name = fileName_encode(temp_name);
+
+        string downloadFileName = GlobalSetting::get()->getDownloadLocation()+"/pdfs/"+temp_name;
+
+        string outputFile = GlobalSetting::get()->getDownloadLocation()+"/html/"+temp_name;
+
+        string command_full = command_name + command_cmd + command_options + downloadFileName + " " + outputFile;
+
         if (!GlobalSetting::get()->skip_file_download) {
             char temp[FILENAME_MAX];
             strcpy(temp, downloadFileName.c_str());
             cout << "Downloading " << *iter << endl;
+            cout << " to " << downloadFileName << endl;
             download_file(temp, (*iter).c_str());
         }
 
@@ -118,6 +121,17 @@ void OnlineFilesDownload::filesAvailable(){
             perror("Handing runtime error and continuing next ... \n");
             std::string message_err = "Error from parsing file " + *iter + "\n";
             perror(message_err.c_str());
+
+            if(!GlobalSetting::get()->skip_interactive_mode){
+                char input;
+                std::fflush(stderr);
+                std::cout<<"Press c to continue : ";
+                std::fflush(stdout);
+                std::cin>>input;
+                if(input!='c' || input!='C')
+                    break;
+            }
+
         }
 
 
@@ -315,6 +329,37 @@ std::string OnlineFilesDownload::url_encode(const std::string &value) {
         // Any other characters are percent-encoded
         escaped << uppercase;
         escaped << '%' << setw(2) << int((unsigned char) c);
+        escaped << nouppercase;
+    }
+
+    return escaped.str();
+}
+
+std::string OnlineFilesDownload::fileName_encode(const std::string &value) {
+    ostringstream escaped;
+    escaped.fill('0');
+    escaped << hex;
+
+    for (string::const_iterator i = value.begin(), n = value.end(); i != n; ++i) {
+        string::value_type c = (*i);
+
+        // Keep alphanumeric and other accepted characters intact
+        if (isalnum(c) || c == '.') {
+            escaped << c;
+            continue;
+        }
+
+        if(c == '_'){
+            escaped << c;
+            escaped << *(i+1);
+            escaped << *(i+2);
+            i += 2;
+            continue;
+        }
+
+        // Any other characters are percent-encoded
+        escaped << uppercase;
+        escaped << '_' << setw(2) << int((unsigned char) c);
         escaped << nouppercase;
     }
 

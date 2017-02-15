@@ -46,6 +46,8 @@ void InformationHolder::open_file_scheme() {
     scheme_stream<<"paper_code,subject_name,credits,type,exam,mode,kind,minor,major,";
     scheme_stream<<"max_marks,pass_marks"<<std::endl;
 
+    scheme_stream.flush();
+
 }
 
 
@@ -71,6 +73,8 @@ InformationHolder::insert_scheme(std::string scheme_prog_code, std::string prog_
         scheme_stream<<mode<<","<<kind<<","<<minor<<","<<major<<","<<max_marks<<","<<pass_marks;
         scheme_stream<<std::endl;
 
+    scheme_stream.flush();
+
 }
 
 void InformationHolder::open_file_result() {
@@ -88,6 +92,8 @@ void InformationHolder::open_file_result() {
     result_stream<<"batch,examination,institute_code,institute_name,rollnumber,name,sid,";
     result_stream<<"result_scheme_id,paper_code,credit,minor,major,total"<<std::endl;
 
+    result_stream.flush();
+
 }
 void InformationHolder::insert_result(std::string scheme_prog_code, std::string prepared_date, std::string declared_date,
                                       std::string prog_name, std::string prog_sem_year, std::string batch,
@@ -100,5 +106,7 @@ void InformationHolder::insert_result(std::string scheme_prog_code, std::string 
         result_stream<<institute_code<<","<<institute_name<<","<<rollnumber<<","<<name<<",";
         result_stream<<sid<<","<<result_scheme_id<<","<<paperCode<<","<<credit<<",";
         result_stream<<minor<<","<<major<<","<<total<<std::endl;
+
+    result_stream.flush();
 
 }

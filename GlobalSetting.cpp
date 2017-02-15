@@ -49,7 +49,7 @@ void GlobalSetting::setDownloadLocation(char *location) {
     currentLoc = loc;
 
     downloadLocation = currentLoc;
-    downloadLocation = downloadLocation.append("/download");
+    downloadLocation = downloadLocation.append("/ggsipu");
 
 }
 
@@ -58,7 +58,7 @@ void GlobalSetting::setDownloadLocation(string location) {
     currentLoc = location;
 
     downloadLocation = currentLoc;
-    downloadLocation = downloadLocation.append("/download");
+    downloadLocation = downloadLocation.append("/ggsipu");
 
 }
 

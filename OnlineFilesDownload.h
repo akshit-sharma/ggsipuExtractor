@@ -19,6 +19,7 @@ private:
     int download_file(char *outfilename, const char *url);
     inline bool exists_test1 (const std::string& name);
     std::string url_encode(const std::string &value);
+    std::string fileName_encode(const std::string &value);
 
 public:
     OnlineFilesDownload();

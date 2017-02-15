@@ -25,10 +25,11 @@ private:
     };
 
 public:
+    bool skip_interactive_mode = false;
     bool skip_request_pdf_list = false;
-    bool skip_jdk_download = false;
-    bool skip_jdk_extract = false;
-    bool skip_pdfbox_download = false;
+    bool skip_jdk_download = true;
+    bool skip_jdk_extract = true;
+    bool skip_pdfbox_download = true;
     bool skip_file_download = false;
     bool skip_file_convert = false;
 
