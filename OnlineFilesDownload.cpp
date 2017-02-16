@@ -129,6 +129,7 @@ void OnlineFilesDownload::filesAvailable(){
                 }else{
                     perror("Handing parsing error and continuing next ... \n");
                     std::fflush(stderr);
+                    continue;
                 }
             }
         }
@@ -152,6 +153,7 @@ void OnlineFilesDownload::filesAvailable(){
                 } else {
                     perror("Handing runtime error and continuing next ... \n");
                     std::fflush(stderr);
+                    continue;
                 }
 
             }
