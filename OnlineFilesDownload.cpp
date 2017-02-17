@@ -14,6 +14,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <dirent.h>
 
 #include "OnlineFilesDownload.h"
 #include "GlobalSetting.h"
@@ -27,8 +28,8 @@ OnlineFilesDownload::OnlineFilesDownload() {
 
     GlobalSetting * gs = GlobalSetting::get();
 
-    _mkdir((gs->getDownloadLocation()+"/pdfs").c_str());
-    _mkdir((gs->getDownloadLocation()+"/html").c_str());
+    _mkdir((gs->getWorkingLocation()+"/pdfs").c_str());
+    _mkdir((gs->getWorkingLocation()+"/html").c_str());
 
 }
 
@@ -55,14 +56,34 @@ void OnlineFilesDownload::filesAvailable(){
 
     }else{
 
-        list_of_files.insert("One time pass");
+        DIR *dir;
+        struct dirent *ent;
 
+        std::string downloadLoc = std::string(GlobalSetting::get()->getWorkingLocation()+"/pdfs");
+        if ((dir = opendir (downloadLoc.c_str())) != NULL) {
+
+            while ((ent = readdir (dir)) != NULL) {
+                std::string file_name (ent->d_name);
+
+                string temp_name = (file_name).substr((file_name).find_last_of("\\/")+1);
+
+                if(temp_name.find(".pdf") == std::string::npos)
+                    continue;
+
+                if(temp_name.substr(temp_name.length()-4, 4).compare(".pdf") == 0){
+                    temp_name = temp_name.substr(0, temp_name.length()-4);
+                    list_of_files.insert(temp_name);
+                }
+
+            }
+            closedir (dir);
+        }
     }
 
     //Download JDK
     //https://gist.githubusercontent.com/hgomez/4697585/raw/5ba0e8d5a726df92ee069aceac917de4e680bfd0/oracledownload >> shell script >> jdk.tar >> extract
     //http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jdk-8u112-linux-x64.tar.gz >> tar >> extract
-    string fileName = GlobalSetting::get()->getDownloadLocation();
+    string fileName = GlobalSetting::get()->getWorkingLocation();
     chdir(fileName.c_str());
 
     if(!GlobalSetting::get()->skip_jdk_download) {
@@ -76,7 +97,7 @@ void OnlineFilesDownload::filesAvailable(){
     if(!GlobalSetting::get()->skip_pdfbox_download) {
 
         // Download http://www-us.apache.org/dist/pdfbox/2.0.4/pdfbox-app-2.0.4.jar
-        fileName = GlobalSetting::get()->getDownloadLocation();
+        fileName = GlobalSetting::get()->getWorkingLocation();
         fileName = fileName + "/pdfbox-app-2.0.4.jar";
         char temp[FILENAME_MAX];
         strcpy(temp, fileName.c_str());
@@ -95,11 +116,13 @@ void OnlineFilesDownload::filesAvailable(){
         int returnValue;
 
         string temp_name = (*iter).substr((*iter).find_last_of("\\/")+1);
-        temp_name = fileName_encode(temp_name);
 
-        string downloadFileName = GlobalSetting::get()->getDownloadLocation()+"/pdfs/"+temp_name+".pdf";
+        if(!GlobalSetting::get()->skip_file_download)
+            temp_name = fileName_encode(temp_name);
 
-        string outputFile = GlobalSetting::get()->getDownloadLocation()+"/html/"+temp_name+".html";
+        string downloadFileName = GlobalSetting::get()->getWorkingLocation()+"/pdfs/"+temp_name+".pdf";
+
+        string outputFile = GlobalSetting::get()->getWorkingLocation()+"/html/"+temp_name+".html";
 
         string command_full = command_name + command_cmd + command_options + downloadFileName + " " + outputFile;
 

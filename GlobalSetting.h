@@ -11,7 +11,7 @@
 
 class GlobalSetting {
 private:
-    std::string downloadLocation;
+    std::string workingLocation;
     std::string currentLoc;
     static GlobalSetting* instance;
 
@@ -39,10 +39,10 @@ public:
 
     static GlobalSetting* get();
 
-    void setDownloadLocation(char *location);
-    void setDownloadLocation(std::string location);
-    std::string getDownloadLocation();
-    const char * getDownloadLocationC();
+    void setWorkingLocation(char *location);
+    void setWorkingLocation(std::string location);
+    std::string getWorkingLocation();
+    const char * getWorkingLocationC();
 
 };
 

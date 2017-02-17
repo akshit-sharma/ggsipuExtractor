@@ -316,13 +316,17 @@ void InformationExtractor::start(){
                         paper_code += line[position];
                         position++;
                     }while((line[position]>='0' && line[position]<='9'));
+                    while(line[position]!=' ') {
+                        paper_code += line[position];
+                        position++;
+                    }
 
                     while(line[position]==' ')
                         position++;
 
+                    has_more.empty();
+                    subject_name = "";
                     do {
-                        has_more.empty();
-                        subject_name = "";
                         do {
                             subject_name += line[position];
                             position++;
@@ -332,7 +336,7 @@ void InformationExtractor::start(){
                                 has_more.pop();
                         } while (!((line[position] == ' ') &&
                                    (line[position + 1] >= '0' && line[position + 1] <= '9'))
-                                 && has_more.size() == 0);
+                                 || has_more.size() != 0);
 
                         subject_name = trim(subject_name);
 
@@ -350,6 +354,7 @@ void InformationExtractor::start(){
 
                         if (line[position] == '(') {
                             subject_name += " " + credits + " ";
+                            has_more.push('(');
                         }
                     }while(line[position]=='(');
 

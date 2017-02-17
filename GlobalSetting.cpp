@@ -17,7 +17,7 @@ GlobalSetting* GlobalSetting::instance = NULL;
 GlobalSetting::GlobalSetting() {
 
     this->getCurrentLoc();
-    this->setDownloadLocation(currentLoc);
+    this->setWorkingLocation(currentLoc);
 
 }
 
@@ -42,35 +42,35 @@ GlobalSetting* GlobalSetting::get(){
 
 }
 
-void GlobalSetting::setDownloadLocation(char *location) {
+void GlobalSetting::setWorkingLocation(char *location) {
 
     string loc(location);
 
     currentLoc = loc;
 
-    downloadLocation = currentLoc;
-    downloadLocation = downloadLocation.append("/ggsipu");
+    workingLocation = currentLoc;
+    workingLocation = workingLocation.append("/ggsipu");
 
 }
 
-void GlobalSetting::setDownloadLocation(string location) {
+void GlobalSetting::setWorkingLocation(string location) {
 
     currentLoc = location;
 
-    downloadLocation = currentLoc;
-    downloadLocation = downloadLocation.append("/ggsipu");
+    workingLocation = currentLoc;
+    workingLocation = workingLocation.append("/ggsipu");
 
 }
 
-string GlobalSetting::getDownloadLocation() {
+string GlobalSetting::getWorkingLocation() {
 
-    return downloadLocation;
+    return workingLocation;
 
 }
 
-const char * GlobalSetting::getDownloadLocationC() {
+const char * GlobalSetting::getWorkingLocationC() {
 
-    return downloadLocation.c_str();
+    return workingLocation.c_str();
 
 }
 

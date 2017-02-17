@@ -15,8 +15,8 @@
 InformationHolder* InformationHolder::instance = NULL;
 
 InformationHolder::InformationHolder() {
-    scheme_file_name = GlobalSetting::get()->getDownloadLocation()+"/scheme.csv";
-    result_file_name = GlobalSetting::get()->getDownloadLocation()+"/results.csv";
+    scheme_file_name = GlobalSetting::get()->getWorkingLocation()+"/scheme.csv";
+    result_file_name = GlobalSetting::get()->getWorkingLocation()+"/results.csv";
 
     std::cout<<"scheme_file_name : "<<scheme_file_name<<std::endl;
     std::cout<<"result_file_name : "<<result_file_name<<std::endl;
