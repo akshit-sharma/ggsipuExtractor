@@ -274,7 +274,7 @@ void InformationExtractor::start(){
                 size_t position = 6;
 
                 if(line[position]>='0' && line[position]<='9') {
-                    std::stack<char> has_more;
+                    int has_more = 0;
                     std::string s_no;
                     std::string paper_id;
                     std::string paper_code;
@@ -304,6 +304,9 @@ void InformationExtractor::start(){
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
+                    if(paper_id.compare("13652")==0)
+                        std::cout<<"this one";
+
                     while(line[position]==' ')
                         position++;
 
@@ -324,19 +327,23 @@ void InformationExtractor::start(){
                     while(line[position]==' ')
                         position++;
 
-                    has_more.empty();
+                    bool isNextNumber;
+                    bool isCurrentSpace;
+
+                    has_more = 0;
                     subject_name = "";
                     do {
                         do {
                             subject_name += line[position];
-                            position++;
                             if (line[position] == '(')
-                                has_more.push('(');
+                                has_more ++;
                             if (line[position] == ')')
-                                has_more.pop();
-                        } while (!((line[position] == ' ') &&
-                                   (line[position + 1] >= '0' && line[position + 1] <= '9'))
-                                 || has_more.size() != 0);
+                                has_more -- ;
+                            isCurrentSpace = (line[position] == ' ');
+                            isNextNumber = (line[position + 1] >= '0' && line[position + 1] <= '9');
+                            position++;
+                        } while ((!(isCurrentSpace && isNextNumber))
+                                 || has_more != 0);
 
                         subject_name = trim(subject_name);
 
@@ -354,7 +361,7 @@ void InformationExtractor::start(){
 
                         if (line[position] == '(') {
                             subject_name += " " + credits + " ";
-                            has_more.push('(');
+                            has_more++;
                         }
                     }while(line[position]=='(');
 
