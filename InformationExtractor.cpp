@@ -304,9 +304,6 @@ void InformationExtractor::start(){
                         position++;
                     }while(line[position]>='0' && line[position]<='9');
 
-                    if(paper_id.compare("13652")==0)
-                        std::cout<<"this one";
-
                     while(line[position]==' ')
                         position++;
 
@@ -361,7 +358,6 @@ void InformationExtractor::start(){
 
                         if (line[position] == '(') {
                             subject_name += " " + credits + " ";
-                            has_more++;
                         }
                     }while(line[position]=='(');
 
