@@ -327,6 +327,15 @@ void InformationExtractor::start(){
                     bool isNextNumber;
                     bool isCurrentSpace;
 
+                    size_t parsedNumber = 0;
+                    size_t parsedTyped = 0;
+                    size_t parsedExam = 0;
+                    size_t parsedMode = 0;
+
+                    size_t safePosition;
+
+                    safePosition = position;
+
                     has_more = 0;
                     subject_name = "";
                     do {
@@ -338,6 +347,35 @@ void InformationExtractor::start(){
                                 has_more -- ;
                             isCurrentSpace = (line[position] == ' ');
                             isNextNumber = (line[position + 1] >= '0' && line[position + 1] <= '9');
+                            if(isNextNumber){
+                                parsedNumber = position;
+                            }
+                            if(position > safePosition){
+                                if(parsedTyped == 0 || parsedTyped==std::string::npos)
+                                    parsedTyped = subject_name.find("PRACTICAL");
+                                if(parsedTyped==std::string::npos)
+                                    parsedTyped = subject_name.find("THEORY");
+                                if(parsedExam == 0 || parsedExam==std::string::npos)
+                                    parsedExam = subject_name.find("NUES");
+                                if(parsedTyped==std::string::npos)
+                                    parsedTyped = subject_name.find("UES");
+                                if(parsedMode == 0 || parsedMode==std::string::npos)
+                                    parsedMode = subject_name.find("COMPULSORY");
+                                if(parsedTyped==std::string::npos)
+                                    parsedTyped = subject_name.find("ELECTIVE");
+                            }
+                            if((parsedNumber!=std::string::npos
+                                    && (parsedExam!=std::string::npos
+                                    || parsedTyped!=std::string::npos
+                                    || parsedMode!=std::string::npos))
+                                    && (parsedNumber>0 && (parsedExam>0 ||
+                                        parsedTyped>0 || parsedMode>0))){
+                                subject_name = subject_name.substr(0, parsedNumber);
+                                has_more = 0;
+                                isCurrentSpace = true;
+                                isNextNumber = true;
+                                position = safePosition + parsedNumber - 1;
+                            }
                             position++;
                         } while ((!(isCurrentSpace && isNextNumber))
                                  || has_more != 0);
@@ -352,6 +390,11 @@ void InformationExtractor::start(){
                             credits += line[position];
                             position++;
                         } while ((line[position] >= '0' && line[position] <= '9'));
+
+                        while(line[position]=='.')
+                            position++;
+                        while((line[position] >= '0' && line[position] <= '9'))
+                            position++;
 
                         while (line[position] == ' ')
                             position++;
